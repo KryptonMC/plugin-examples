@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.kryptonmc</groupId>
+    <artifactId>getting-started-maven-kotlin</artifactId>
+    <version>1.0</version>
+
+    <repositories>
+        <!-- Krypton repo -->
+        <repository>
+            <id>krypton-repo</id>
+            <url>https://repo.kryptonmc.org/releases</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- API dependency -->
+        <dependency>
+            <groupId>org.kryptonmc</groupId>
+            <artifactId>api</artifactId>
+            <version>${krypton.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- Set source directory to src/main/kotlin -->
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <plugins>
+            <!-- Configure Kotlin Maven -->
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+
+                <executions>
+                    <!-- Configure kapt, to process the Plugin annotation -->
+                    <execution>
+                        <id>kapt</id>
+                        <goals>
+                            <goal>kapt</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>src/main/kotlin</sourceDir>
+                            </sourceDirs>
+                            <annotationProcessorPaths>
+                                <annotationProcessorPath>
+                                    <groupId>org.kryptonmc</groupId>
+                                    <artifactId>api</artifactId>
+                                    <version>${krypton.version}</version>
+                                </annotationProcessorPath>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+                    <!-- Configure compilation -->
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Configure Maven shade -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <kotlin.version>1.5.21</kotlin.version>
+        <krypton.version>0.37.1</krypton.version>
+        <!-- Krypton requires Java 16 -->
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
+    </properties>
+</project>
